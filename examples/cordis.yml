@@ -1,0 +1,64 @@
+# Installation spec for @deepseek-ai/dsh-plugin-web-research
+# 
+# Install with: pnpm dsh install ./examples/cordis.yml
+# Or use the plugin_manager tool in Harness
+
+insert:
+  - id: web-research-bundle
+    name: '@deepseek-ai/dsh-plugin-web-research'
+    config:
+      # Choose your primary search provider
+      # 'auto' = try providers in order of preference until one succeeds
+      # 'searxng' or 'duckduckgo' = use only that provider
+      
+      provider: auto
+
+      # Provider configurations
+      providers:
+        searxng:
+          enabled: true
+          url: https://searx.be  # Change to your self-hosted instance if using one
+          timeoutMs: 10000
+          maxResults: 20
+
+        duckduckgo:
+          enabled: true
+          apiUrl: https://api.duckduckgo.com
+          timeoutMs: 10000
+          maxResults: 20
+
+        brave:
+          enabled: false
+          # apiKey: YOUR_BRAVE_API_KEY  # Uncomment and set if using Brave Search API
+
+      search:
+        maxResults: 8           # Results per query (1-20)
+        timeoutMs: 10000        # Per-provider timeout
+        enableFallback: true    # Try other providers if primary fails
+
+      fetch:
+        timeoutMs: 30000        # Page fetch timeout
+        maxResponseBytes: 5242880  # 5MB max response size
+        maxRedirects: 5         # Maximum redirects to follow
+        userAgent: DeepSeekWebResearch/1.0
+
+      extraction:
+        maxExtractChars: 30000  # Default extraction limit
+        keepInternalLinks: true
+        removeJunk: true        # Remove ads, nav, scripts, etc.
+
+      cache:
+        enabled: true
+        maxSize: 100            # Maximum cached items
+        searchTtlMs: 60000      # 1 minute for search results
+        pageTtlMs: 300000       # 5 minutes for pages
+
+      concurrency:
+        maxRequests: 4          # Max concurrent requests
+
+      rateLimit:
+        requestsPerMinute: 30   # Optional per-minute limit
+        retryDelayMs: 1000
+
+      logging:
+        debug: false            # Enable for troubleshooting
